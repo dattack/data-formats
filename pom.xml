@@ -7,10 +7,10 @@
         <version>1</version>
     </parent>
     <artifactId>data-formats</artifactId>
-    <version>0.1-SNAPSHOT</version>
+    <version>0.1</version>
     <packaging>jar</packaging>
     <name>data-formats</name>
-		<description>A very simple Java library for reading and writing data in different formats.</description>
+    <description>A very simple Java library for reading and writing data in different formats.</description>
     <url>http://www.dattack.com</url>
     <inceptionYear>2016</inceptionYear>
     <organization>
