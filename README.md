@@ -7,7 +7,7 @@ data-formats
 A very simple Java library for reading and writing data in different formats.
 Currently, the available formats are:
 
-* CVS (Comma Separated Values).
+* CSV (Comma Separated Values).
 
 Copyright and license
 =========
