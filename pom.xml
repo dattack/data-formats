@@ -37,9 +37,6 @@
             <timezone>Europe/Madrid</timezone>
         </developer>
     </developers>
-    <prerequisites>
-        <maven>3.0.4</maven>
-    </prerequisites>
     <scm>
         <connection>scm:git:https://github.com/dattack/data-formats.git</connection>
         <developerConnection>scm:git:git+ssh://git@github.com/dattack/data-formats.git</developerConnection>
@@ -77,30 +74,4 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-    <repositories>
-        <repository>
-            <releases>
-                <updatePolicy>never</updatePolicy>
-                <checksumPolicy>fail</checksumPolicy>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-            <id>dattack-releases</id>
-            <name>Dattack Releases</name>
-            <url>http://maven.dattack.com/release</url>
-        </repository>
-        <repository>
-            <releases>
-                <enabled>false</enabled>
-            </releases>
-            <snapshots>
-                <updatePolicy>always</updatePolicy>
-                <checksumPolicy>warn</checksumPolicy>
-            </snapshots>
-            <id>dattack-snapshots</id>
-            <name>Dattack Snapshots</name>
-            <url>http://maven.dattack.com/snapshot</url>
-        </repository>
-    </repositories>
 </project>
