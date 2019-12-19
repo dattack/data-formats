@@ -1,9 +1,8 @@
 language: java
 jdk:
-- oraclejdk8
-
+- openjdk8
 sudo: false
-
+dist: xenial
 notifications:
   email:
     recipients:
