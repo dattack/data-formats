@@ -46,7 +46,9 @@ Thumbs.db
 .ruleset
 .settings
 .eclipse-pmd
+.idea
 maven-eclipse.xml
+*.iml
 target
 
 # Backup files #

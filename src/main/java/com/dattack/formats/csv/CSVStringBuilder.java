@@ -135,6 +135,27 @@ public class CSVStringBuilder {
         return this;
     }
 
+    /**
+     * Appends a new value.
+     *
+     * @param value
+     *            the new value to append
+     * @return the instance of CSVStringBuilder
+     */
+    public CSVStringBuilder append(final Boolean value) {
+        if (value == null) {
+            appendValue(configuration.getNullStr());
+        } else {
+            if (value) {
+                appendValue(configuration.getTrueValue(), !isComment);
+            } else {
+                appendValue(configuration.getFalseValue(), !isComment);
+            }
+        }
+
+        return this;
+    }
+
     private void appendValue(final String value) {
         appendValue(value, false);
     }
@@ -146,7 +167,10 @@ public class CSVStringBuilder {
         }
 
         if (quote) {
-            rebuild.append(configuration.getQuoteChar()).append(value).append(configuration.getQuoteChar());
+            String escapedValue = value.replaceAll("\"", "\\\"");
+            rebuild.append(configuration.getQuoteChar())
+                    .append(escapedValue)
+                    .append(configuration.getQuoteChar());
         } else {
             rebuild.append(value);
         }

@@ -28,6 +28,8 @@ public final class CSVConfiguration {
     private final String eol;
     private final char escapeChar;
     private final String nullValue;
+    private final String trueValue;
+    private final String falseValue;
     private final char quoteChar;
     private final DateFormat dateFormat;
     private final String separator;
@@ -75,6 +77,8 @@ public final class CSVConfiguration {
         private String nullValue;
         private char quoteChar;
         private String separator;
+        private String trueValue;
+        private String falseValue;
         private SimpleDateFormat dateFormat;
 
         public CsvConfigurationBuilder() {
@@ -83,6 +87,8 @@ public final class CSVConfiguration {
             this.nullValue = DEFAULT_NULL_VALUE;
             this.quoteChar = DEFAULT_QUOTE_CHARACTER;
             this.escapeChar = DEFAULT_ESCAPE_CHARACTER;
+            this.trueValue = Boolean.TRUE.toString();
+            this.falseValue = Boolean.FALSE.toString();
             this.eol = DEFAULT_EOL;
         }
 
@@ -142,6 +148,30 @@ public final class CSVConfiguration {
         }
 
         /**
+         * Sets the TRUE value.
+         *
+         * @param value
+         *            the value to set
+         * @return the instance of CSVConfigurationBuilder
+         */
+        public CsvConfigurationBuilder withTrueValue(final String value) {
+            this.trueValue = value;
+            return this;
+        }
+
+        /**
+         * Sets the FALSE value.
+         *
+         * @param value
+         *            the value to set
+         * @return the instance of CSVConfigurationBuilder
+         */
+        public CsvConfigurationBuilder withFalseValue(final String value) {
+            this.falseValue = value;
+            return this;
+        }
+
+        /**
          * Sets the quote character.
          *
          * @param value
@@ -170,6 +200,8 @@ public final class CSVConfiguration {
         this.commentChar = builder.commentChar;
         this.separator = builder.separator;
         this.nullValue = builder.nullValue;
+        this.trueValue = builder.trueValue;
+        this.falseValue = builder.falseValue;
         this.quoteChar = builder.quoteChar;
         this.escapeChar = builder.escapeChar;
         this.eol = builder.eol;
@@ -194,6 +226,14 @@ public final class CSVConfiguration {
 
     public String getNullStr() {
         return nullValue;
+    }
+
+    public String getTrueValue() {
+        return trueValue;
+    }
+
+    public String getFalseValue() {
+        return trueValue;
     }
 
     public char getQuoteChar() {
