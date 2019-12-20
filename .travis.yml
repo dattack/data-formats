@@ -3,6 +3,14 @@ jdk:
 - openjdk8
 sudo: false
 dist: xenial
+
+# safelist
+branches:
+  only:
+  - master
+  - develop
+  - /^v\d+\.\d+(\.\d+)?(-\S*)?$/
+
 notifications:
   email:
     recipients:
