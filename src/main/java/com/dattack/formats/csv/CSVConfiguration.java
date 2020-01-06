@@ -17,6 +17,7 @@ package com.dattack.formats.csv;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Properties;
 
 /**
  * @author cvarela
@@ -71,6 +72,16 @@ public final class CSVConfiguration {
 
         private static final String DEFAULT_DATE_FORMAT = "yyyy/MM/dd HH:mm:ss.S";
 
+        private static final String COMMENT_CHAR_PROPERTY_NAME = "csv.comment.value";
+        private static final String EOL_PROPERTY_NAME = "csv.eol.value";
+        private static final String ESCAPE_CHAR_PROPERTY_NAME = "csv.escape.value";
+        private static final String NULL_VALUE_PROPERTY_NAME = "csv.null.value";
+        private static final String QUOTE_CHAR_PROPERTY_NAME = "csv.quote.value";
+        private static final String SEPARATOR_PROPERTY_NAME = "csv.separator.value";
+        private static final String TRUE_PROPERTY_NAME = "csv.true.value";
+        private static final String FALSE_PROPERTY_NAME = "csv.false.value";
+        private static final String DATE_FORMAT_PROPERTY_NAME = "csv.datetime.format";
+
         private char commentChar;
         private String eol;
         private char escapeChar;
@@ -79,7 +90,26 @@ public final class CSVConfiguration {
         private String separator;
         private String trueValue;
         private String falseValue;
-        private SimpleDateFormat dateFormat;
+        private String dateFormat;
+
+        public CsvConfigurationBuilder(Properties properties) {
+            this.commentChar = getChar(properties.getProperty(COMMENT_CHAR_PROPERTY_NAME), DEFAULT_COMMENT_CHAR);
+            this.separator = properties.getProperty(SEPARATOR_PROPERTY_NAME, DEFAULT_SEPARATOR);
+            this.nullValue = properties.getProperty(NULL_VALUE_PROPERTY_NAME, DEFAULT_NULL_VALUE);
+            this.quoteChar = getChar(properties.getProperty(QUOTE_CHAR_PROPERTY_NAME), DEFAULT_QUOTE_CHARACTER);
+            this.escapeChar = getChar(properties.getProperty(ESCAPE_CHAR_PROPERTY_NAME), DEFAULT_ESCAPE_CHARACTER);
+            this.eol = properties.getProperty(EOL_PROPERTY_NAME, DEFAULT_EOL);
+            this.trueValue = properties.getProperty(TRUE_PROPERTY_NAME, Boolean.TRUE.toString());
+            this.falseValue = properties.getProperty(FALSE_PROPERTY_NAME, Boolean.FALSE.toString());
+            this.dateFormat = properties.getProperty(DATE_FORMAT_PROPERTY_NAME, DEFAULT_DATE_FORMAT);
+        }
+
+        private char getChar(String value, char defaultValue) {
+            if (value == null) {
+                return defaultValue;
+            }
+            return value.charAt(0);
+        }
 
         public CsvConfigurationBuilder() {
             this.commentChar = DEFAULT_COMMENT_CHAR;
@@ -90,13 +120,25 @@ public final class CSVConfiguration {
             this.trueValue = Boolean.TRUE.toString();
             this.falseValue = Boolean.FALSE.toString();
             this.eol = DEFAULT_EOL;
+            this.dateFormat = DEFAULT_DATE_FORMAT;
         }
 
         public CSVConfiguration build() {
-            if (dateFormat == null) {
-                dateFormat = new SimpleDateFormat(DEFAULT_DATE_FORMAT);
-            }
             return new CSVConfiguration(this);
+        }
+
+        /**
+         * Sets the date format.
+         *
+         * @param format
+         *            the format expression
+         * @return the instance of CSVConfigurationBuilder
+         */
+        public CsvConfigurationBuilder withDateFormat(final String format) {
+            if (format != null) {
+                this.dateFormat = format;
+            }
+            return this;
         }
 
         /**
@@ -205,7 +247,7 @@ public final class CSVConfiguration {
         this.quoteChar = builder.quoteChar;
         this.escapeChar = builder.escapeChar;
         this.eol = builder.eol;
-        this.dateFormat = builder.dateFormat;
+        this.dateFormat = new SimpleDateFormat(builder.dateFormat);
     }
 
     public char getCommentChar() {
@@ -233,7 +275,7 @@ public final class CSVConfiguration {
     }
 
     public String getFalseValue() {
-        return trueValue;
+        return falseValue;
     }
 
     public char getQuoteChar() {
