@@ -52,7 +52,7 @@ public class CSVReader implements Closeable {
     }
 
     private boolean isComment(final String line) {
-        return line.charAt(0) == configuration.getCommentChar();
+        return line.trim().startsWith(Character.toString(configuration.getCommentChar()));
     }
 
     /**
