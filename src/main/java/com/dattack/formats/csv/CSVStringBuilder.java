@@ -166,16 +166,20 @@ public class CSVStringBuilder {
             rebuild.append(configuration.getSeparator());
         }
 
+        String escapedValue = value;
+        if (configuration.getEol().contains("\n")) {
+            escapedValue = escapedValue.replaceAll("\n", " ");
+        }
+
         if (quote && '\u0000' != configuration.getQuoteChar()) {
             // NOT NULL char
-            String escapedValue = escape(value, configuration.getQuoteChar(), configuration.getEscapeChar());
+            escapedValue = escape(escapedValue, configuration.getQuoteChar(), configuration.getEscapeChar());
             rebuild.append(configuration.getQuoteChar())
                     .append(escapedValue)
                     .append(configuration.getQuoteChar());
         } else {
-            String escapedValue = value;
             if (configuration.getSeparator().length() == 1) {
-                escapedValue = escape(value, configuration.getSeparator().charAt(0), configuration.getEscapeChar());
+                escapedValue = escape(escapedValue, configuration.getSeparator().charAt(0), configuration.getEscapeChar());
             }
             rebuild.append(escapedValue);
         }
