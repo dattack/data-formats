@@ -63,9 +63,9 @@ public class CSVStringBuilder {
      */
     public CSVStringBuilder append(final Date value) {
         if (value == null) {
-            appendValue(configuration.getNullStr());
+            appendDirectValue(configuration.getNullStr());
         } else {
-            appendValue(configuration.getDateFormat().format(value));
+            appendDirectValue(configuration.getDateFormat().format(value));
         }
         return this;
     }
@@ -78,7 +78,7 @@ public class CSVStringBuilder {
      * @return the instance of CSVStringBuilder
      */
     public CSVStringBuilder append(final Double value) {
-        appendValue(Objects.toString(value, configuration.getNullStr()));
+        appendDirectValue(Objects.toString(value, configuration.getNullStr()));
         return this;
     }
 
@@ -90,7 +90,7 @@ public class CSVStringBuilder {
      * @return the instance of CSVStringBuilder
      */
     public CSVStringBuilder append(final Float value) {
-        appendValue(Objects.toString(value, configuration.getNullStr()));
+        appendDirectValue(Objects.toString(value, configuration.getNullStr()));
         return this;
     }
 
@@ -102,7 +102,7 @@ public class CSVStringBuilder {
      * @return the instance of CSVStringBuilder
      */
     public CSVStringBuilder append(final Integer value) {
-        appendValue(Objects.toString(value, configuration.getNullStr()));
+        appendDirectValue(Objects.toString(value, configuration.getNullStr()));
         return this;
     }
 
@@ -114,7 +114,7 @@ public class CSVStringBuilder {
      * @return the instance of CSVStringBuilder
      */
     public CSVStringBuilder append(final Long value) {
-        appendValue(Objects.toString(value, configuration.getNullStr()));
+        appendDirectValue(Objects.toString(value, configuration.getNullStr()));
         return this;
     }
 
@@ -144,16 +144,38 @@ public class CSVStringBuilder {
      */
     public CSVStringBuilder append(final Boolean value) {
         if (value == null) {
-            appendValue(configuration.getNullStr());
+            appendDirectValue(configuration.getNullStr());
         } else {
             if (value) {
-                appendValue(configuration.getTrueValue(), !isComment);
+                appendDirectValue(configuration.getTrueValue(), !isComment);
             } else {
-                appendValue(configuration.getFalseValue(), !isComment);
+                appendDirectValue(configuration.getFalseValue(), !isComment);
             }
         }
 
         return this;
+    }
+
+    private void appendDirectValue(final String escapedValue) {
+        appendDirectValue(escapedValue, false);
+    }
+
+    private void appendDirectValue(final String escapedValue, final boolean quote) {
+
+        if (!emptyLine) {
+            rebuild.append(configuration.getSeparator());
+        }
+
+        if (quote && '\u0000' != configuration.getQuoteChar()) {
+            // NOT NULL char
+            rebuild.append(configuration.getQuoteChar())
+                    .append(escapedValue)
+                    .append(configuration.getQuoteChar());
+        } else {
+            rebuild.append(escapedValue);
+        }
+
+        emptyLine = false;
     }
 
     private void appendValue(final String value) {
@@ -161,10 +183,6 @@ public class CSVStringBuilder {
     }
 
     private void appendValue(final String value, final boolean quote) {
-
-        if (!emptyLine) {
-            rebuild.append(configuration.getSeparator());
-        }
 
         String escapedValue = value;
         if (configuration.getEol().contains("\n")) {
@@ -174,23 +192,19 @@ public class CSVStringBuilder {
         if (quote && '\u0000' != configuration.getQuoteChar()) {
             // NOT NULL char
             escapedValue = escape(escapedValue, configuration.getQuoteChar(), configuration.getEscapeChar());
-            rebuild.append(configuration.getQuoteChar())
-                    .append(escapedValue)
-                    .append(configuration.getQuoteChar());
         } else {
             if (configuration.getSeparator().length() == 1) {
                 escapedValue = escape(escapedValue, configuration.getSeparator().charAt(0), configuration.getEscapeChar());
             }
-            rebuild.append(escapedValue);
         }
 
-        emptyLine = false;
+        appendDirectValue(escapedValue, quote);
     }
 
     private String escape(String value, char charToEscape, char escapeChar) {
         String replacement;
         if ('\\' == escapeChar) {
-            replacement = "\\\\" + configuration.getQuoteChar();
+            replacement = "\\\\" + charToEscape;
         } else {
             replacement = Character.toString(escapeChar) + charToEscape;
         }
