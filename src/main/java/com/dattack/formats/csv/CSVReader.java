@@ -58,7 +58,7 @@ public class CSVReader implements Closeable {
     /**
      * Iterate over the reader and returns the next object.
      *
-     * @return the next object o <tt>null</tt> if no one exists
+     * @return the next object o <code>null</code> if no one exists
      * @throws IOException
      *             if an I/O error occurs
      */
