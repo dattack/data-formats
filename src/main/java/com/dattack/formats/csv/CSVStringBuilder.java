@@ -25,6 +25,7 @@ import java.util.Objects;
  * @author cvarela
  * @since 0.1
  */
+@SuppressWarnings("checkstyle:AbbreviationAsWordInName")
 public class CSVStringBuilder {
 
     private static final int DEFAULT_CAPACITY = 100;
@@ -194,7 +195,8 @@ public class CSVStringBuilder {
             escapedValue = escape(escapedValue, configuration.getQuoteChar(), configuration.getEscapeChar());
         } else {
             if (configuration.getSeparator().length() == 1) {
-                escapedValue = escape(escapedValue, configuration.getSeparator().charAt(0), configuration.getEscapeChar());
+                escapedValue = escape(escapedValue, configuration.getSeparator().charAt(0),
+                        configuration.getEscapeChar());
             }
         }
 

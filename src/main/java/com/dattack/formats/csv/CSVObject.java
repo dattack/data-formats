@@ -16,22 +16,37 @@
 package com.dattack.formats.csv;
 
 /**
+ * Represents the data row of a CSV file. It also provides methods to access the different columns of data it contains.
+ *
  * @author cvarela
  * @since 0.1
  */
+@SuppressWarnings("checkstyle:AbbreviationAsWordInName")
 public class CSVObject {
 
     private final String[] data;
 
-    public CSVObject(final String[] data) {
-        this.data = data;
+    CSVObject(final String separator, final String text) {
+        this.data = text.split(separator);
     }
 
+    /**
+     * Returns the number of elements in this object.
+     *
+     * @return the number of elements in this object.
+     */
     public int getSize() {
         return data.length;
     }
 
-    public String get(final int index) {
+    /**
+     * Returns the element at the specified position in this object.
+     *
+     * @param index index of the element to return
+     * @return the element at the specified position in this object
+     * @throws IndexOutOfBoundsException if the index is out of range {@code (index < 0 || index >= size())}.
+     */
+    public String get(final int index) throws IndexOutOfBoundsException {
         return data[index];
     }
 }

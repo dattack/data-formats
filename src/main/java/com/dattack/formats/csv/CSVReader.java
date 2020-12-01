@@ -18,13 +18,18 @@ package com.dattack.formats.csv;
 import java.io.BufferedReader;
 import java.io.Closeable;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 
 /**
+ * Convenience class for reading CSV files using a provided CSVConfiguration.
+ *
  * @author cvarela
  * @since 0.1
  */
+@SuppressWarnings("checkstyle:AbbreviationAsWordInName")
 public class CSVReader implements Closeable {
 
     private final CSVConfiguration configuration;
@@ -46,7 +51,8 @@ public class CSVReader implements Closeable {
     private BufferedReader getReader() throws IOException {
 
         if (bufferedReader == null) {
-            bufferedReader = new BufferedReader(new FileReader(dataFile));
+            bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(dataFile),
+                    StandardCharsets.UTF_8));
         }
         return bufferedReader;
     }
@@ -58,9 +64,8 @@ public class CSVReader implements Closeable {
     /**
      * Iterate over the reader and returns the next object.
      *
-     * @return the next object o <code>null</code> if no one exists
-     * @throws IOException
-     *             if an I/O error occurs
+     * @return the next object or <code>null</code> if no one exists
+     * @throws IOException if an I/O error occurs
      */
     public synchronized CSVObject next() throws IOException {
 
@@ -72,8 +77,7 @@ public class CSVReader implements Closeable {
             if (line.isEmpty() || isComment(line)) {
                 continue;
             }
-            final String[] data = line.split(configuration.getSeparator());
-            object = new CSVObject(data);
+            object = new CSVObject(configuration.getSeparator(), line);
         }
 
         return object;

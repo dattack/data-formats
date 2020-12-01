@@ -20,9 +20,12 @@ import java.text.SimpleDateFormat;
 import java.util.Properties;
 
 /**
+ * A configuration object used when reading or creating a CSV document.
+ *
  * @author cvarela
  * @since 0.1
  */
+@SuppressWarnings("checkstyle:AbbreviationAsWordInName")
 public final class CSVConfiguration {
 
     private final char commentChar;
@@ -72,15 +75,55 @@ public final class CSVConfiguration {
 
         private static final String DEFAULT_DATE_FORMAT = "yyyy/MM/dd HH:mm:ss.S";
 
-        private static final String COMMENT_CHAR_PROPERTY_NAME = "csv.comment.value";
-        private static final String EOL_PROPERTY_NAME = "csv.eol.value";
-        private static final String ESCAPE_CHAR_PROPERTY_NAME = "csv.escape.value";
-        private static final String NULL_VALUE_PROPERTY_NAME = "csv.null.value";
-        private static final String QUOTE_CHAR_PROPERTY_NAME = "csv.quote.value";
-        private static final String SEPARATOR_PROPERTY_NAME = "csv.separator.value";
-        private static final String TRUE_PROPERTY_NAME = "csv.true.value";
-        private static final String FALSE_PROPERTY_NAME = "csv.false.value";
-        private static final String DATE_FORMAT_PROPERTY_NAME = "csv.datetime.format";
+        // ---------------------------------------------------------------------
+
+        /**
+         * The name of the property containing the comment-line character to use. Default is <i>#</i>.
+         */
+        public static final String COMMENT_CHAR_PROPERTY_NAME = "csv.comment.value";
+
+        /**
+         * The name of the property containing the end-of-line character to use. Default is the system-dependent line
+         * separator string:
+         * {@code System.getProperty("line.separator") }
+         */
+        public static final String EOL_PROPERTY_NAME = "csv.eol.value";
+
+        /**
+         * The name of the property containing the escape character to use. Default is <i>\</i>.
+         */
+        public static final String ESCAPE_CHAR_PROPERTY_NAME = "csv.escape.value";
+
+        /**
+         * The name of the property containing the substitution string to use when a value is {@code null}.
+         */
+        public static final String NULL_VALUE_PROPERTY_NAME = "csv.null.value";
+
+        /**
+         * The name of the property containing the quote character to use. Default is <i>"</i>.
+         */
+        public static final String QUOTE_CHAR_PROPERTY_NAME = "csv.quote.value";
+
+        /**
+         * The name of the property containing the string to use as field separator. Default is a comma (<i>,</i>).
+         */
+        public static final String SEPARATOR_PROPERTY_NAME = "csv.separator.value";
+
+        /**
+         * The name of the property containing the string to print when a boolean is TRUE. Default value is <i>true</i>.
+         */
+        public static final String TRUE_PROPERTY_NAME = "csv.true.value";
+
+        /**
+         * The name of the property containing the string to print when a boolean is FALSE. Default value is
+         * <i>false</i>.
+         */
+        public static final String FALSE_PROPERTY_NAME = "csv.false.value";
+
+        /**
+         * The name of the property containing the date format to use. Default value is {@code yyyy/MM/dd HH:mm:ss.S}.
+         */
+        public static final String DATE_FORMAT_PROPERTY_NAME = "csv.datetime.format";
 
         private char commentChar;
         private String eol;
@@ -92,6 +135,11 @@ public final class CSVConfiguration {
         private String falseValue;
         private String dateFormat;
 
+        /**
+         * Class constructor using custom configuration.
+         *
+         * @param properties the object containing
+         */
         public CsvConfigurationBuilder(Properties properties) {
             this.commentChar = getChar(properties.getProperty(COMMENT_CHAR_PROPERTY_NAME), DEFAULT_COMMENT_CHAR);
             this.separator = properties.getProperty(SEPARATOR_PROPERTY_NAME, DEFAULT_SEPARATOR);
@@ -111,6 +159,9 @@ public final class CSVConfiguration {
             return value.charAt(0);
         }
 
+        /**
+         * Class constructor using default configuration.
+         */
         public CsvConfigurationBuilder() {
             this.commentChar = DEFAULT_COMMENT_CHAR;
             this.separator = DEFAULT_SEPARATOR;
@@ -130,8 +181,7 @@ public final class CSVConfiguration {
         /**
          * Sets the date format.
          *
-         * @param format
-         *            the format expression
+         * @param format the format expression
          * @return the instance of CSVConfigurationBuilder
          */
         public CsvConfigurationBuilder withDateFormat(final String format) {
@@ -144,8 +194,7 @@ public final class CSVConfiguration {
         /**
          * Sets the comment character delimiter.
          *
-         * @param value
-         *            the value to set
+         * @param value the value to set
          * @return the instance of CSVConfigurationBuilder
          */
         public CsvConfigurationBuilder withCommentChar(final char value) {
@@ -156,8 +205,7 @@ public final class CSVConfiguration {
         /**
          * Sets the end-of-line mark.
          *
-         * @param value
-         *            the value to set
+         * @param value the value to set
          * @return the instance of CSVConfigurationBuilder
          */
         public CsvConfigurationBuilder withEol(final String value) {
@@ -168,8 +216,7 @@ public final class CSVConfiguration {
         /**
          * Sets the escape character.
          *
-         * @param value
-         *            the value to set
+         * @param value the value to set
          * @return the instance of CSVConfigurationBuilder
          */
         public CsvConfigurationBuilder withEscapeChar(final char value) {
@@ -180,8 +227,7 @@ public final class CSVConfiguration {
         /**
          * Sets the comment character delimiter.
          *
-         * @param value
-         *            the value to set
+         * @param value the value to set
          * @return the instance of CSVConfigurationBuilder
          */
         public CsvConfigurationBuilder withNullValue(final String value) {
@@ -192,8 +238,7 @@ public final class CSVConfiguration {
         /**
          * Sets the TRUE value.
          *
-         * @param value
-         *            the value to set
+         * @param value the value to set
          * @return the instance of CSVConfigurationBuilder
          */
         public CsvConfigurationBuilder withTrueValue(final String value) {
@@ -204,8 +249,7 @@ public final class CSVConfiguration {
         /**
          * Sets the FALSE value.
          *
-         * @param value
-         *            the value to set
+         * @param value the value to set
          * @return the instance of CSVConfigurationBuilder
          */
         public CsvConfigurationBuilder withFalseValue(final String value) {
@@ -216,8 +260,7 @@ public final class CSVConfiguration {
         /**
          * Sets the quote character.
          *
-         * @param value
-         *            the value to set
+         * @param value the value to set
          * @return the instance of CSVConfigurationBuilder
          */
         public CsvConfigurationBuilder withQuoteChar(final char value) {
@@ -228,8 +271,7 @@ public final class CSVConfiguration {
         /**
          * Sets the separator character.
          *
-         * @param value
-         *            the value to set
+         * @param value the value to set
          * @return the instance of CSVConfigurationBuilder
          */
         public CsvConfigurationBuilder withSeparator(final String value) {
