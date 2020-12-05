@@ -18,6 +18,7 @@ package com.dattack.formats.csv;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Properties;
+import java.util.TimeZone;
 
 /**
  * A configuration object used when reading or creating a CSV document.
@@ -36,6 +37,9 @@ public final class CSVConfiguration {
     private final String falseValue;
     private final char quoteChar;
     private final DateFormat dateFormat;
+    private final DateFormat sqlDateFormat;
+    private final DateFormat timeFormat;
+    private final DateFormat timestampFormat;
     private final String separator;
 
     /**
@@ -73,7 +77,13 @@ public final class CSVConfiguration {
          */
         private static final String DEFAULT_SEPARATOR = ",";
 
-        private static final String DEFAULT_DATE_FORMAT = "yyyy/MM/dd HH:mm:ss.S";
+        private static final String DEFAULT_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
+
+        private static final String DEFAULT_SQL_DATE_FORMAT = "yyyy-MM-dd";
+
+        private static final String DEFAULT_TIME_FORMAT = "HH:mm:ss.SSS";
+
+        private static final String DEFAULT_TIMESTAMP_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
 
         // ---------------------------------------------------------------------
 
@@ -121,9 +131,31 @@ public final class CSVConfiguration {
         public static final String FALSE_PROPERTY_NAME = "csv.false.value";
 
         /**
-         * The name of the property containing the date format to use. Default value is {@code yyyy/MM/dd HH:mm:ss.S}.
+         * The name of the property containing the date format to use. Default value is {@code yyyy-MM-dd'T'HH:mm:ss
+         * .SSSXXX}.
          */
-        public static final String DATE_FORMAT_PROPERTY_NAME = "csv.datetime.format";
+        public static final String DATE_FORMAT_PROPERTY_NAME = "csv.format.java.util.date";
+
+        /**
+         * The name of the property containing the date format to use. Default value is {@code yyyy-MM-dd}.
+         */
+        public static final String SQL_DATE_FORMAT_PROPERTY_NAME = "csv.format.java.sql.date";
+
+        /**
+         * The name of the property containing the time format to use. Default value is {@code HH:mm:ss.S}.
+         */
+        public static final String TIME_FORMAT_PROPERTY_NAME = "csv.format.java.sql.time";
+
+        /**
+         * The name of the property containing the time format to use. Default value is {@code yyyy-MM-dd'T'HH:mm:ss
+         * .SSSXXX}.
+         */
+        public static final String TIMESTAMP_FORMAT_PROPERTY_NAME = "csv.format.java.sql.timestamp";
+
+        /**
+         * The name of the property containing the time zone to use.
+         */
+        public static final String TIMEZONE_NAME_PROPERTY_NAME = "csv.timezone";
 
         private char commentChar;
         private String eol;
@@ -134,6 +166,10 @@ public final class CSVConfiguration {
         private String trueValue;
         private String falseValue;
         private String dateFormat;
+        private String sqlDateFormat;
+        private String timeFormat;
+        private String timestampFormat;
+        private String timeZoneName;
 
         /**
          * Class constructor using custom configuration.
@@ -150,6 +186,10 @@ public final class CSVConfiguration {
             this.trueValue = properties.getProperty(TRUE_PROPERTY_NAME, Boolean.TRUE.toString());
             this.falseValue = properties.getProperty(FALSE_PROPERTY_NAME, Boolean.FALSE.toString());
             this.dateFormat = properties.getProperty(DATE_FORMAT_PROPERTY_NAME, DEFAULT_DATE_FORMAT);
+            this.sqlDateFormat = properties.getProperty(SQL_DATE_FORMAT_PROPERTY_NAME, DEFAULT_SQL_DATE_FORMAT);
+            this.timeFormat = properties.getProperty(TIME_FORMAT_PROPERTY_NAME, DEFAULT_TIME_FORMAT);
+            this.timestampFormat = properties.getProperty(TIMESTAMP_FORMAT_PROPERTY_NAME, DEFAULT_TIMESTAMP_FORMAT);
+            this.timeZoneName = properties.getProperty(TIMEZONE_NAME_PROPERTY_NAME, null);
         }
 
         private char getChar(String value, char defaultValue) {
@@ -172,6 +212,10 @@ public final class CSVConfiguration {
             this.falseValue = Boolean.FALSE.toString();
             this.eol = DEFAULT_EOL;
             this.dateFormat = DEFAULT_DATE_FORMAT;
+            this.sqlDateFormat = DEFAULT_SQL_DATE_FORMAT;
+            this.timeFormat = DEFAULT_TIME_FORMAT;
+            this.timestampFormat = DEFAULT_TIMESTAMP_FORMAT;
+            this.timeZoneName = null;
         }
 
         public CSVConfiguration build() {
@@ -179,7 +223,7 @@ public final class CSVConfiguration {
         }
 
         /**
-         * Sets the date format.
+         * Sets the date format to apply to instance of java.util.Date.
          *
          * @param format the format expression
          * @return the instance of CSVConfigurationBuilder
@@ -187,6 +231,58 @@ public final class CSVConfiguration {
         public CsvConfigurationBuilder withDateFormat(final String format) {
             if (format != null) {
                 this.dateFormat = format;
+            }
+            return this;
+        }
+
+        /**
+         * Sets the date format to apply to instance of java.sql.Date.
+         *
+         * @param format the format expression
+         * @return the instance of CSVConfigurationBuilder
+         */
+        public CsvConfigurationBuilder withSqlDateFormat(final String format) {
+            if (format != null) {
+                this.sqlDateFormat = format;
+            }
+            return this;
+        }
+
+        /**
+         * Sets the time format.
+         *
+         * @param format the format expression
+         * @return the instance of CSVConfigurationBuilder
+         */
+        public CsvConfigurationBuilder withTimeFormat(final String format) {
+            if (format != null) {
+                this.timeFormat = format;
+            }
+            return this;
+        }
+
+        /**
+         * Sets the timestamp format.
+         *
+         * @param format the format expression
+         * @return the instance of CSVConfigurationBuilder
+         */
+        public CsvConfigurationBuilder withTimestampFormat(final String format) {
+            if (format != null) {
+                this.timestampFormat = format;
+            }
+            return this;
+        }
+
+        /**
+         * Sets the name of the TimeZone.
+         *
+         * @param timeZoneName the name of the time zone
+         * @return the instance of CSVConfigurationBuilder
+         */
+        public CsvConfigurationBuilder withTimeZoneName(final String timeZoneName) {
+            if (timeZoneName != null) {
+                this.timeZoneName = timeZoneName;
             }
             return this;
         }
@@ -290,6 +386,13 @@ public final class CSVConfiguration {
         this.escapeChar = builder.escapeChar;
         this.eol = builder.eol;
         this.dateFormat = new SimpleDateFormat(builder.dateFormat);
+        this.sqlDateFormat = new SimpleDateFormat(builder.sqlDateFormat);
+        this.timeFormat = new SimpleDateFormat(builder.timeFormat);
+        this.timestampFormat = new SimpleDateFormat(builder.timestampFormat);
+        if (builder.timeZoneName != null) {
+            this.dateFormat.setTimeZone(TimeZone.getTimeZone(builder.timeZoneName));
+            this.timestampFormat.setTimeZone(TimeZone.getTimeZone(builder.timeZoneName));
+        }
     }
 
     public char getCommentChar() {
@@ -298,6 +401,18 @@ public final class CSVConfiguration {
 
     public DateFormat getDateFormat() {
         return dateFormat;
+    }
+
+    public DateFormat getSqlDateFormat() {
+        return sqlDateFormat;
+    }
+
+    public DateFormat getTimeFormat() {
+        return timeFormat;
+    }
+
+    public DateFormat getTimestampFormat() {
+        return timestampFormat;
     }
 
     public String getEol() {

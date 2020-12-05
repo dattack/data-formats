@@ -15,6 +15,8 @@
  */
 package com.dattack.formats.csv;
 
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Objects;
 
@@ -58,8 +60,7 @@ public class CSVStringBuilder {
     /**
      * Appends a new value.
      *
-     * @param value
-     *            the new value to append
+     * @param value the new value to append
      * @return the instance of CSVStringBuilder
      */
     public CSVStringBuilder append(final Date value) {
@@ -71,11 +72,50 @@ public class CSVStringBuilder {
         return this;
     }
 
+    public CSVStringBuilder append(final java.sql.Date value) {
+        if (value == null) {
+            appendDirectValue(configuration.getNullStr());
+        } else {
+            appendDirectValue(configuration.getSqlDateFormat().format(value));
+        }
+        return this;
+    }
+
     /**
      * Appends a new value.
      *
-     * @param value
-     *            the new value to append
+     * @param value the new value to append
+     * @return the instance of CSVStringBuilder
+     */
+    public CSVStringBuilder append(final Time value) {
+        if (value == null) {
+            appendDirectValue(configuration.getNullStr());
+        } else {
+            appendDirectValue(configuration.getTimeFormat().format(value));
+        }
+        return this;
+    }
+
+
+    /**
+     * Appends a new value.
+     *
+     * @param value the new value to append
+     * @return the instance of CSVStringBuilder
+     */
+    public CSVStringBuilder append(final Timestamp value) {
+        if (value == null) {
+            appendDirectValue(configuration.getNullStr());
+        } else {
+            appendDirectValue(configuration.getTimestampFormat().format(value));
+        }
+        return this;
+    }
+
+    /**
+     * Appends a new value.
+     *
+     * @param value the new value to append
      * @return the instance of CSVStringBuilder
      */
     public CSVStringBuilder append(final Double value) {
