@@ -45,10 +45,8 @@ public class CSVStringBuilder {
     /**
      * Constructs a CSV builder with an initial capacity specified by the <code>capacity</code> argument.
      *
-     * @param configuration
-     *            the CSV configuration
-     * @param capacity
-     *            the initial capacity of the internal buffer
+     * @param configuration the CSV configuration
+     * @param capacity      the initial capacity of the internal buffer
      */
     public CSVStringBuilder(final CSVConfiguration configuration, final int capacity) {
         this.configuration = configuration;
@@ -72,6 +70,12 @@ public class CSVStringBuilder {
         return this;
     }
 
+    /**
+     * Appends a new value.
+     *
+     * @param value the new value to append
+     * @return the instance of CSVStringBuilder
+     */
     public CSVStringBuilder append(final java.sql.Date value) {
         if (value == null) {
             appendDirectValue(configuration.getNullStr());
@@ -119,68 +123,146 @@ public class CSVStringBuilder {
      * @return the instance of CSVStringBuilder
      */
     public CSVStringBuilder append(final Double value) {
-        appendDirectValue(Objects.toString(value, configuration.getNullStr()));
+        return append(value, null);
+    }
+
+    /**
+     * Appends a formatted string using the specified format string.
+     *
+     * @param value  the new value to append
+     * @param format a format string.
+     * @return the instance of CSVStringBuilder
+     * @see java.lang.String#format
+     */
+    public CSVStringBuilder append(final Double value, String format) {
+        if (value == null || format == null) {
+            appendDirectValue(Objects.toString(value, configuration.getNullStr()));
+        } else {
+            appendDirectValue(String.format(format, value));
+        }
         return this;
     }
 
     /**
      * Appends a new value.
      *
-     * @param value
-     *            the new value to append
+     * @param value the new value to append
      * @return the instance of CSVStringBuilder
      */
     public CSVStringBuilder append(final Float value) {
-        appendDirectValue(Objects.toString(value, configuration.getNullStr()));
+        return append(value, null);
+    }
+
+    /**
+     * Appends a formatted string using the specified format string.
+     *
+     * @param value  the new value to append
+     * @param format a format string.
+     * @return the instance of CSVStringBuilder
+     * @see java.lang.String#format
+     */
+    public CSVStringBuilder append(final Float value, String format) {
+        if (value == null || format == null) {
+            appendDirectValue(Objects.toString(value, configuration.getNullStr()));
+        } else {
+            appendDirectValue(String.format(format, value));
+        }
         return this;
     }
 
     /**
      * Appends a new value.
      *
-     * @param value
-     *            the new value to append
+     * @param value the new value to append
      * @return the instance of CSVStringBuilder
      */
     public CSVStringBuilder append(final Integer value) {
-        appendDirectValue(Objects.toString(value, configuration.getNullStr()));
+        return append(value, null);
+    }
+
+    /**
+     * Appends a formatted string using the specified format string.
+     *
+     * @param value  the new value to append
+     * @param format a format string.
+     * @return the instance of CSVStringBuilder
+     * @see java.lang.String#format
+     */
+    public CSVStringBuilder append(final Integer value, String format) {
+        if (value == null || format == null) {
+            appendDirectValue(Objects.toString(value, configuration.getNullStr()));
+        } else {
+            appendDirectValue(String.format(format, value));
+        }
         return this;
     }
 
     /**
      * Appends a new value.
      *
-     * @param value
-     *            the new value to append
+     * @param value the new value to append
      * @return the instance of CSVStringBuilder
      */
     public CSVStringBuilder append(final Long value) {
-        appendDirectValue(Objects.toString(value, configuration.getNullStr()));
+        return append(value, null);
+    }
+
+    /**
+     * Appends a formatted string using the specified format string.
+     *
+     * @param value  the new value to append
+     * @param format a format string.
+     * @return the instance of CSVStringBuilder
+     * @see java.lang.String#format
+     */
+    public CSVStringBuilder append(final Long value, String format) {
+        if (value == null || format == null) {
+            appendDirectValue(Objects.toString(value, configuration.getNullStr()));
+        } else {
+            appendDirectValue(String.format(format, value));
+        }
         return this;
     }
 
     /**
      * Appends a new value.
      *
-     * @param value
-     *            the new value to append
+     * @param value the new value to append
      * @return the instance of CSVStringBuilder
      */
     public CSVStringBuilder append(final String value) {
-        if (value == null) {
-            appendValue(configuration.getNullStr());
-        } else {
-            appendValue(value, !isComment);
-        }
+        return append(value, null);
+    }
 
+    /**
+     * Appends a formatted string using the specified format string.
+     *
+     * @param value  the new value to append
+     * @param format a format string.
+     * @return the instance of CSVStringBuilder
+     * @see java.lang.String#format
+     */
+    public CSVStringBuilder append(final String value, String format) {
+
+        if (value == null) {
+            appendDirectValue(configuration.getNullStr());
+        } else if (format == null) {
+            appendValue(value, !isComment);
+        } else {
+            String escapedValue = escape(value, !isComment);
+            if (isComment) {
+                appendDirectValue(String.format(format, escapedValue));
+            } else {
+                appendDirectValue(String.format(format, getQuotedString(escapedValue, true)));
+            }
+        }
         return this;
     }
 
     /**
      * Appends a new value.
      *
-     * @param value
-     *            the new value to append
+     * @param value the new value to append
      * @return the instance of CSVStringBuilder
      */
     public CSVStringBuilder append(final Boolean value) {
@@ -207,23 +289,26 @@ public class CSVStringBuilder {
             rebuild.append(configuration.getSeparator());
         }
 
-        if (quote && '\u0000' != configuration.getQuoteChar()) {
-            // NOT NULL char
-            rebuild.append(configuration.getQuoteChar())
-                    .append(escapedValue)
-                    .append(configuration.getQuoteChar());
-        } else {
-            rebuild.append(escapedValue);
-        }
+        rebuild.append(getQuotedString(escapedValue, quote));
 
         emptyLine = false;
     }
 
-    private void appendValue(final String value) {
-        appendValue(value, false);
+    private void appendValue(final String value, final boolean quote) {
+        appendDirectValue(escape(value, quote), quote);
     }
 
-    private void appendValue(final String value, final boolean quote) {
+    private String getQuotedString(final String escapedValue, final boolean quote) {
+
+        String quotedString = escapedValue;
+        if (quote && '\u0000' != configuration.getQuoteChar()) {
+            // NOT NULL char
+            quotedString = configuration.getQuoteChar() + escapedValue + configuration.getQuoteChar();
+        }
+        return quotedString;
+    }
+
+    private String escape(final String value, final boolean quote) {
 
         String escapedValue = value;
         if (configuration.getEol().contains("\n")) {
@@ -240,7 +325,7 @@ public class CSVStringBuilder {
             }
         }
 
-        appendDirectValue(escapedValue, quote);
+        return escapedValue;
     }
 
     private String escape(String value, char charToEscape, char escapeChar) {
@@ -278,18 +363,35 @@ public class CSVStringBuilder {
     /**
      * Appends a comment.
      *
-     * @param message
-     *            the comment to add
+     * @param message the comment to add
      * @return the instance of CSVStringBuilder
      */
     public CSVStringBuilder comment(final String message) {
-        comment(message, true);
-        return this;
+        return comment(message, true);
     }
 
-    private void comment(final String message, final boolean eol) {
+    /**
+     * Appends a comment.
+     *
+     * @param message the comment to add
+     * @param eol     when true, it adds an EOL to the end of the comment
+     * @return the instance of CSVStringBuilder
+     */
+    private CSVStringBuilder comment(final String message, final boolean eol) {
+        return comment(message, !emptyLine || isComment, eol);
+    }
 
-        if (!emptyLine || isComment) {
+    /**
+     * Appends a comment.
+     *
+     * @param message           the comment to add
+     * @param useEolAtBeginning when true, it adds an EOL to the beginning of the comment
+     * @param useEolAtEnd       when true, it adds an EOL to the end of the comment
+     * @return the instance of CSVStringBuilder
+     */
+    public CSVStringBuilder comment(final String message, final boolean useEolAtBeginning, final boolean useEolAtEnd) {
+
+        if (useEolAtBeginning) {
             eol();
         }
 
@@ -300,9 +402,11 @@ public class CSVStringBuilder {
 
         isComment = true;
 
-        if (eol) {
+        if (useEolAtEnd) {
             eol();
         }
+
+        return this;
     }
 
     /**
