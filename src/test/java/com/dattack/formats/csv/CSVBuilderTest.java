@@ -16,6 +16,8 @@
 package com.dattack.formats.csv;
 
 import org.junit.Test;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -89,7 +91,8 @@ public final class CSVBuilderTest {
                 .append("simple text")
                 .append("text with \"special\" chars") // quote
                 .append(java.sql.Timestamp.from(dateTime.toInstant()))
-                .append(10.2F) // Float
+                .append(10.2)
+                .append(new BigDecimal(BigInteger.valueOf(105), 1))
                 .append(1) // Integer
                 .comment()
                 .append("another comment")
@@ -99,7 +102,7 @@ public final class CSVBuilderTest {
         String expected = "#comment line\n" + //
                 "\n" + //
                 "1000,\"true\",1000.5,\"false\",\"simple text\",\"text with \\\"special\\\" chars\"" +
-                ",2020-01-02T13:14:15.003Z,10.2,1\n#another comment\n";
+                ",2020-01-02T13:14:15.003Z,10.2,10.5,1\n#another comment\n";
         assertEquals(expected, csv);
     }
 
@@ -136,7 +139,8 @@ public final class CSVBuilderTest {
                 .append("simple text")
                 .append("text with #special# chars")
                 .append(java.sql.Timestamp.from(instant))
-                .append(10.2F)
+                .append(10.2)
+                .append(new BigDecimal(BigInteger.valueOf(105), 1))
                 .append(1)
                 .eol()
                 .toString();
@@ -144,7 +148,7 @@ public final class CSVBuilderTest {
         String expected = "@comment line<EOL>\n" + //
                 "<EOL>\n" + //
                 "1000\t#T_R_U_E#\t1000.5\t#F_A_L_S_E#\t#simple text#\t#text with /#special/# chars#" +
-                "\t2020-01-02 13:14:15Z\t10.2\t1<EOL>\n";
+                "\t2020-01-02 13:14:15Z\t10.2\t10.5\t1<EOL>\n";
         assertEquals(expected, csv);
     }
 

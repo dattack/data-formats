@@ -15,9 +15,14 @@
  */
 package com.dattack.formats.csv;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.util.Date;
+import java.util.Locale;
 import java.util.Objects;
 
 /**
@@ -37,6 +42,7 @@ public class CSVStringBuilder {
     private final CSVConfiguration configuration;
     private boolean emptyLine;
     private final StringBuilder rebuild;
+    private final DecimalFormat decimalFormat;
 
     public CSVStringBuilder(final CSVConfiguration configuration) {
         this(configuration, DEFAULT_CAPACITY);
@@ -53,6 +59,10 @@ public class CSVStringBuilder {
         this.rebuild = new StringBuilder(capacity);
         this.emptyLine = true;
         this.isComment = false;
+
+        decimalFormat = new DecimalFormat("0", DecimalFormatSymbols.getInstance(Locale.ENGLISH));
+        decimalFormat.setMaximumFractionDigits(Integer.MAX_VALUE);
+        decimalFormat.setRoundingMode(RoundingMode.HALF_UP);
     }
 
     /**
@@ -122,6 +132,28 @@ public class CSVStringBuilder {
      * @param value the new value to append
      * @return the instance of CSVStringBuilder
      */
+    public CSVStringBuilder append(final BigDecimal value) {
+        return append(value, null);
+    }
+
+    /**
+     * Appends a formatted string using the specified format string.
+     *
+     * @param value  the new value to append
+     * @param format a format string.
+     * @return the instance of CSVStringBuilder
+     * @see java.lang.String#format
+     */
+    public CSVStringBuilder append(final BigDecimal value, String format) {
+        return appendDirectNumber(value, format);
+    }
+
+    /**
+     * Appends a new value.
+     *
+     * @param value the new value to append
+     * @return the instance of CSVStringBuilder
+     */
     public CSVStringBuilder append(final Double value) {
         return append(value, null);
     }
@@ -135,12 +167,7 @@ public class CSVStringBuilder {
      * @see java.lang.String#format
      */
     public CSVStringBuilder append(final Double value, String format) {
-        if (value == null || format == null) {
-            appendDirectValue(Objects.toString(value, configuration.getNullStr()));
-        } else {
-            appendDirectValue(String.format(format, value));
-        }
-        return this;
+        return appendDirectNumber(value, format);
     }
 
     /**
@@ -162,12 +189,7 @@ public class CSVStringBuilder {
      * @see java.lang.String#format
      */
     public CSVStringBuilder append(final Float value, String format) {
-        if (value == null || format == null) {
-            appendDirectValue(Objects.toString(value, configuration.getNullStr()));
-        } else {
-            appendDirectValue(String.format(format, value));
-        }
-        return this;
+        return appendDirectNumber(value, format);
     }
 
     /**
@@ -189,12 +211,7 @@ public class CSVStringBuilder {
      * @see java.lang.String#format
      */
     public CSVStringBuilder append(final Integer value, String format) {
-        if (value == null || format == null) {
-            appendDirectValue(Objects.toString(value, configuration.getNullStr()));
-        } else {
-            appendDirectValue(String.format(format, value));
-        }
-        return this;
+        return appendDirectNumber(value, format);
     }
 
     /**
@@ -216,12 +233,7 @@ public class CSVStringBuilder {
      * @see java.lang.String#format
      */
     public CSVStringBuilder append(final Long value, String format) {
-        if (value == null || format == null) {
-            appendDirectValue(Objects.toString(value, configuration.getNullStr()));
-        } else {
-            appendDirectValue(String.format(format, value));
-        }
-        return this;
+        return appendDirectNumber(value, format);
     }
 
     /**
@@ -276,6 +288,20 @@ public class CSVStringBuilder {
             }
         }
 
+        return this;
+    }
+
+    private CSVStringBuilder appendDirectNumber(final Number value, String format) {
+
+        if (Objects.isNull(value)) {
+            appendDirectValue(configuration.getNullStr());
+        } else {
+            if (Objects.isNull(format)) {
+                appendDirectValue(decimalFormat.format(value));
+            } else {
+                appendDirectValue(String.format(format, value));
+            }
+        }
         return this;
     }
 
