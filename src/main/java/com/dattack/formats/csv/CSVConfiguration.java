@@ -29,6 +29,76 @@ import java.util.TimeZone;
 @SuppressWarnings("checkstyle:AbbreviationAsWordInName")
 public final class CSVConfiguration {
 
+    /**
+     * The name of the property containing the comment-line character to use. Default is <i>#</i>.
+     */
+    public static final String COMMENT_CHAR_PROPERTY_NAME = "csv.comment.value";
+
+    /**
+     * The name of the property containing the end-of-line character to use. Default is the system-dependent line
+     * separator string:
+     * {@code System.getProperty("line.separator") }
+     */
+    public static final String EOL_PROPERTY_NAME = "csv.eol.value";
+
+    /**
+     * The name of the property containing the escape character to use. Default is <i>\</i>.
+     */
+    public static final String ESCAPE_CHAR_PROPERTY_NAME = "csv.escape.value";
+
+    /**
+     * The name of the property containing the substitution string to use when a value is {@code null}.
+     */
+    public static final String NULL_VALUE_PROPERTY_NAME = "csv.null.value";
+
+    /**
+     * The name of the property containing the quote character to use. Default is <i>"</i>.
+     */
+    public static final String QUOTE_CHAR_PROPERTY_NAME = "csv.quote.value";
+
+    /**
+     * The name of the property containing the string to use as field separator. Default is a comma (<i>,</i>).
+     */
+    public static final String SEPARATOR_PROPERTY_NAME = "csv.separator.value";
+
+    /**
+     * The name of the property containing the string to print when a boolean is TRUE. Default value is <i>true</i>.
+     */
+    public static final String TRUE_PROPERTY_NAME = "csv.true.value";
+
+    /**
+     * The name of the property containing the string to print when a boolean is FALSE. Default value is
+     * <i>false</i>.
+     */
+    public static final String FALSE_PROPERTY_NAME = "csv.false.value";
+
+    /**
+     * The name of the property containing the date format to use. Default value is {@code yyyy-MM-dd'T'HH:mm:ss
+     * .SSSXXX}.
+     */
+    public static final String DATE_FORMAT_PROPERTY_NAME = "csv.format.java.util.date";
+
+    /**
+     * The name of the property containing the date format to use. Default value is {@code yyyy-MM-dd}.
+     */
+    public static final String SQL_DATE_FORMAT_PROPERTY_NAME = "csv.format.java.sql.date";
+
+    /**
+     * The name of the property containing the time format to use. Default value is {@code HH:mm:ss.S}.
+     */
+    public static final String TIME_FORMAT_PROPERTY_NAME = "csv.format.java.sql.time";
+
+    /**
+     * The name of the property containing the time format to use. Default value is {@code yyyy-MM-dd'T'HH:mm:ss
+     * .SSSXXX}.
+     */
+    public static final String TIMESTAMP_FORMAT_PROPERTY_NAME = "csv.format.java.sql.timestamp";
+
+    /**
+     * The name of the property containing the time zone to use.
+     */
+    public static final String TIMEZONE_NAME_PROPERTY_NAME = "csv.timezone";
+
     private final char commentChar;
     private final String eol;
     private final char escapeChar;
@@ -87,75 +157,6 @@ public final class CSVConfiguration {
 
         // ---------------------------------------------------------------------
 
-        /**
-         * The name of the property containing the comment-line character to use. Default is <i>#</i>.
-         */
-        public static final String COMMENT_CHAR_PROPERTY_NAME = "csv.comment.value";
-
-        /**
-         * The name of the property containing the end-of-line character to use. Default is the system-dependent line
-         * separator string:
-         * {@code System.getProperty("line.separator") }
-         */
-        public static final String EOL_PROPERTY_NAME = "csv.eol.value";
-
-        /**
-         * The name of the property containing the escape character to use. Default is <i>\</i>.
-         */
-        public static final String ESCAPE_CHAR_PROPERTY_NAME = "csv.escape.value";
-
-        /**
-         * The name of the property containing the substitution string to use when a value is {@code null}.
-         */
-        public static final String NULL_VALUE_PROPERTY_NAME = "csv.null.value";
-
-        /**
-         * The name of the property containing the quote character to use. Default is <i>"</i>.
-         */
-        public static final String QUOTE_CHAR_PROPERTY_NAME = "csv.quote.value";
-
-        /**
-         * The name of the property containing the string to use as field separator. Default is a comma (<i>,</i>).
-         */
-        public static final String SEPARATOR_PROPERTY_NAME = "csv.separator.value";
-
-        /**
-         * The name of the property containing the string to print when a boolean is TRUE. Default value is <i>true</i>.
-         */
-        public static final String TRUE_PROPERTY_NAME = "csv.true.value";
-
-        /**
-         * The name of the property containing the string to print when a boolean is FALSE. Default value is
-         * <i>false</i>.
-         */
-        public static final String FALSE_PROPERTY_NAME = "csv.false.value";
-
-        /**
-         * The name of the property containing the date format to use. Default value is {@code yyyy-MM-dd'T'HH:mm:ss
-         * .SSSXXX}.
-         */
-        public static final String DATE_FORMAT_PROPERTY_NAME = "csv.format.java.util.date";
-
-        /**
-         * The name of the property containing the date format to use. Default value is {@code yyyy-MM-dd}.
-         */
-        public static final String SQL_DATE_FORMAT_PROPERTY_NAME = "csv.format.java.sql.date";
-
-        /**
-         * The name of the property containing the time format to use. Default value is {@code HH:mm:ss.S}.
-         */
-        public static final String TIME_FORMAT_PROPERTY_NAME = "csv.format.java.sql.time";
-
-        /**
-         * The name of the property containing the time format to use. Default value is {@code yyyy-MM-dd'T'HH:mm:ss
-         * .SSSXXX}.
-         */
-        public static final String TIMESTAMP_FORMAT_PROPERTY_NAME = "csv.format.java.sql.timestamp";
-
-        /**
-         * The name of the property containing the time zone to use.
-         */
-        public static final String TIMEZONE_NAME_PROPERTY_NAME = "csv.timezone";
 
         private char commentChar;
         private String eol;
@@ -176,7 +177,7 @@ public final class CSVConfiguration {
          *
          * @param properties the object containing
          */
-        public CsvConfigurationBuilder(Properties properties) {
+        private CsvConfigurationBuilder(Properties properties) {
             this.commentChar = getChar(properties.getProperty(COMMENT_CHAR_PROPERTY_NAME), DEFAULT_COMMENT_CHAR);
             this.separator = properties.getProperty(SEPARATOR_PROPERTY_NAME, DEFAULT_SEPARATOR);
             this.nullValue = properties.getProperty(NULL_VALUE_PROPERTY_NAME, DEFAULT_NULL_VALUE);
@@ -202,7 +203,7 @@ public final class CSVConfiguration {
         /**
          * Class constructor using default configuration.
          */
-        public CsvConfigurationBuilder() {
+        private CsvConfigurationBuilder() {
             this.commentChar = DEFAULT_COMMENT_CHAR;
             this.separator = DEFAULT_SEPARATOR;
             this.nullValue = DEFAULT_NULL_VALUE;
@@ -393,6 +394,14 @@ public final class CSVConfiguration {
             this.dateFormat.setTimeZone(TimeZone.getTimeZone(builder.timeZoneName));
             this.timestampFormat.setTimeZone(TimeZone.getTimeZone(builder.timeZoneName));
         }
+    }
+
+    public static CsvConfigurationBuilder custom() {
+        return new CsvConfigurationBuilder();
+    }
+
+    public static CsvConfigurationBuilder custom(final Properties properties) {
+        return new CsvConfigurationBuilder(properties);
     }
 
     public char getCommentChar() {

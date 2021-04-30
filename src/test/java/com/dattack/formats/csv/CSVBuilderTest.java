@@ -15,22 +15,21 @@
  */
 package com.dattack.formats.csv;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Properties;
-import static org.junit.Assert.assertEquals;
-import static com.dattack.formats.csv.CSVConfiguration.CsvConfigurationBuilder;
+import static org.junit.jupiter.api.Assertions.*;
 
 public final class CSVBuilderTest {
 
     @Test
     public void testClear() {
 
-        CSVConfiguration configuration = new CsvConfigurationBuilder().build();
+        CSVConfiguration configuration = CSVConfiguration.custom().build();
         CSVStringBuilder csvBuilder = new CSVStringBuilder(configuration);
 
         String csv = csvBuilder
@@ -48,7 +47,7 @@ public final class CSVBuilderTest {
     @Test
     public void testDate() {
 
-        CSVConfiguration configuration = new CsvConfigurationBuilder()
+        CSVConfiguration configuration = CSVConfiguration.custom()
                 .withSeparator("\t")
                 .withTimeZoneName("UTC")
                 .withDateFormat("yyyy-MM-dd HH:mm:ss.SSSXXX") //
@@ -76,7 +75,7 @@ public final class CSVBuilderTest {
 
         Properties properties = new Properties();
 
-        CSVConfiguration configuration = new CsvConfigurationBuilder(properties)
+        CSVConfiguration configuration = CSVConfiguration.custom(properties)
                 .withTimeZoneName("UTC")
                 .build();
         CSVStringBuilder csvBuilder = new CSVStringBuilder(configuration);
@@ -109,7 +108,7 @@ public final class CSVBuilderTest {
     @Test
     public void testWriteWithCustomBuilder() {
 
-        CSVConfiguration configuration = new CsvConfigurationBuilder().withCommentChar('@') //
+        CSVConfiguration configuration = CSVConfiguration.custom().withCommentChar('@') //
                 .withEol("<EOL>\n") //
                 .withEscapeChar('/') //
                 .withNullValue("(NULL)") //
@@ -125,7 +124,7 @@ public final class CSVBuilderTest {
         executeTestWithCustomConfiguration(configuration);
     }
 
-    private void executeTestWithCustomConfiguration(CSVConfiguration configuration) {
+    private void executeTestWithCustomConfiguration(final CSVConfiguration configuration) {
 
         CSVStringBuilder csvBuilder = new CSVStringBuilder(configuration);
 
@@ -155,19 +154,19 @@ public final class CSVBuilderTest {
     @Test
     public void testWriteWithCustomProperties() {
         Properties properties = new Properties();
-        properties.setProperty(CsvConfigurationBuilder.COMMENT_CHAR_PROPERTY_NAME, "@");
-        properties.setProperty(CsvConfigurationBuilder.EOL_PROPERTY_NAME, "<EOL>\n");
-        properties.setProperty(CsvConfigurationBuilder.ESCAPE_CHAR_PROPERTY_NAME, "/");
-        properties.setProperty(CsvConfigurationBuilder.NULL_VALUE_PROPERTY_NAME, "(NULL)");
-        properties.setProperty(CsvConfigurationBuilder.QUOTE_CHAR_PROPERTY_NAME, "#");
-        properties.setProperty(CsvConfigurationBuilder.SEPARATOR_PROPERTY_NAME, "\t");
-        properties.setProperty(CsvConfigurationBuilder.TRUE_PROPERTY_NAME, "T_R_U_E");
-        properties.setProperty(CsvConfigurationBuilder.FALSE_PROPERTY_NAME, "F_A_L_S_E");
-        properties.setProperty(CsvConfigurationBuilder.DATE_FORMAT_PROPERTY_NAME, "yyyy-MM-dd HH:mm:ssXXX");
-        properties.setProperty(CsvConfigurationBuilder.TIMESTAMP_FORMAT_PROPERTY_NAME, "yyyy-MM-dd HH:mm:ssXXX");
-        properties.setProperty(CsvConfigurationBuilder.TIMEZONE_NAME_PROPERTY_NAME, "UTC");
+        properties.setProperty(CSVConfiguration.COMMENT_CHAR_PROPERTY_NAME, "@");
+        properties.setProperty(CSVConfiguration.EOL_PROPERTY_NAME, "<EOL>\n");
+        properties.setProperty(CSVConfiguration.ESCAPE_CHAR_PROPERTY_NAME, "/");
+        properties.setProperty(CSVConfiguration.NULL_VALUE_PROPERTY_NAME, "(NULL)");
+        properties.setProperty(CSVConfiguration.QUOTE_CHAR_PROPERTY_NAME, "#");
+        properties.setProperty(CSVConfiguration.SEPARATOR_PROPERTY_NAME, "\t");
+        properties.setProperty(CSVConfiguration.TRUE_PROPERTY_NAME, "T_R_U_E");
+        properties.setProperty(CSVConfiguration.FALSE_PROPERTY_NAME, "F_A_L_S_E");
+        properties.setProperty(CSVConfiguration.DATE_FORMAT_PROPERTY_NAME, "yyyy-MM-dd HH:mm:ssXXX");
+        properties.setProperty(CSVConfiguration.TIMESTAMP_FORMAT_PROPERTY_NAME, "yyyy-MM-dd HH:mm:ssXXX");
+        properties.setProperty(CSVConfiguration.TIMEZONE_NAME_PROPERTY_NAME, "UTC");
 
-        CSVConfiguration configuration = new CsvConfigurationBuilder(properties).build();
+        CSVConfiguration configuration = CSVConfiguration.custom(properties).build();
 
         executeTestWithCustomConfiguration(configuration);
     }
@@ -182,7 +181,7 @@ public final class CSVBuilderTest {
     }
 
     private CSVConfiguration getCsvConfiguration() {
-        return new CsvConfigurationBuilder()
+        return CSVConfiguration.custom()
                 .withEscapeChar('\\')
                 .build();
     }
