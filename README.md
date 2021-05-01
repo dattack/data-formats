@@ -22,6 +22,10 @@ You can pull it from the central Maven repositories:
 </dependency>
 ```
 
+The source code on the master branch is the current state of development; it is not
+recommended for general use. If you prefer to build from source, please use an appropriate
+release tag.
+
 ## How-To
 
 ### Writing CSV data
@@ -129,6 +133,9 @@ requests, [please create an issue](https://github.com/dattack/data-formats/issue
 3. Commit your changes: `git commit -am 'Add some feature'`
 4. Push to the branch: `git push origin my-new-feature`
 5. Submit a pull request :D
+
+If you have other questions, please contact by [email](mailto:dev@dattack.com) or
+[@dattackteam](https://twitter.com/dattackteam)
 
 ## License
 
