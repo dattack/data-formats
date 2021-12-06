@@ -2,12 +2,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>parent</artifactId>
         <groupId>com.dattack</groupId>
-        <version>2</version>
+        <artifactId>parent</artifactId>
+        <version>6</version>
     </parent>
     <artifactId>data-formats</artifactId>
-    <version>0.2</version>
+    <version>0.3</version>
     <packaging>jar</packaging>
     <name>data-formats</name>
     <description>A very simple Java library for reading and writing data in different formats.</description>
@@ -39,12 +39,12 @@
     </developers>
     <scm>
         <connection>scm:git:https://github.com/dattack/data-formats.git</connection>
-        <developerConnection>scm:git:git+ssh://git@github.com/dattack/data-formats.git</developerConnection>
+        <developerConnection>scm:git:https://github.com/dattack/data-formats.git</developerConnection>
         <tag>HEAD</tag>
         <url>http://github.com/dattack/data-formats</url>
     </scm>
     <issueManagement>
-        <system>GitHub Issue Management</system>
+        <system>GitHub</system>
         <url>https://github.com/dattack/data-formats/issues</url>
     </issueManagement>
     <ciManagement>
@@ -58,19 +58,17 @@
         </site>
     </distributionManagement>
     <properties>
-        <compiler.source.version>1.7</compiler.source.version>
-        <compiler.target.version>1.7</compiler.target.version>
-        <junit.version>4.12</junit.version>
+        <compiler.source.version>1.8</compiler.source.version>
+        <compiler.target.version>1.8</compiler.target.version>
+        <junit-extensions.version>0.1</junit-extensions.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <slf4j.version>1.7.15</slf4j.version>
     </properties>
     <dependencies>
-
         <!-- For test only -->
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
+            <groupId>com.dattack</groupId>
+            <artifactId>junit-extensions</artifactId>
+            <version>${junit-extensions.version}</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
