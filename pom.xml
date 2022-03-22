@@ -7,7 +7,7 @@
         <version>7</version>
     </parent>
     <artifactId>data-formats</artifactId>
-    <version>0.4-SNAPSHOT</version>
+    <version>0.4</version>
     <packaging>jar</packaging>
     <name>data-formats</name>
     <description>A very simple Java library for reading and writing data in different formats.</description>
