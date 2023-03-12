@@ -18,7 +18,7 @@ You can pull it from the Central Maven repositories:
 <dependency>
     <groupId>com.dattack</groupId>
     <artifactId>data-formats</artifactId>
-    <version>0.2.1</version>
+    <version>0.5-SNAPSHOT</version>
 </dependency>
 ```
 
