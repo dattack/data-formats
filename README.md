@@ -1,18 +1,18 @@
-# data-formats
-
-[![Travis Badge](https://api.travis-ci.com/dattack/data-formats.svg?branch=develop)](https://travis-ci.com/dattack/data-formats/builds)
+[![Build](https://github.com/dattack/data-formats/actions/workflows/maven-deploy.yml/badge.svg?branch=dev)](https://github.com/dattack/data-formats/actions)
 [![license](https://img.shields.io/:license-Apache-blue.svg?style=plastic-square)](LICENSE.md)
 [![Maven Central](https://img.shields.io/maven-central/v/com.dattack/data-formats.svg?label=Maven%20Central)](https://search.maven.org/artifact/com.dattack/data-formats)
 [![javadoc](https://javadoc.io/badge2/com.dattack/data-formats/javadoc.svg)](https://javadoc.io/doc/com.dattack/data-formats)
 
+# data-formats
+
 A very simple Java library for reading and writing data in different formats.
 Currently, the available formats are:
 
-* CSV (Comma Separated Values).
+- CSV (Comma Separated Values).
 
 ## Where can I get the latest release?
 
-You can pull it from the central Maven repositories:
+You can pull it from the Central Maven repositories:
 
 ```xml
 <dependency>
